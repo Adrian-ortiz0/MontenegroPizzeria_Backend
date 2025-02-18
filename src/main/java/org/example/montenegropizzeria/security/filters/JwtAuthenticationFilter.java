@@ -50,8 +50,23 @@ public class JwtAuthenticationFilter extends UsernamePasswordAuthenticationFilte
     }
 
     @Override
-    protected void successfulAuthentication(HttpServletRequest request, HttpServletResponse response, FilterChain chain, Authentication authResult) throws IOException, ServletException {
+    protected void successfulAuthentication(HttpServletRequest request,
+                                            HttpServletResponse response,
+                                            FilterChain chain,
+                                            Authentication authResult) throws IOException, ServletException {
         User user = (User) authResult.getPrincipal();
+
+        if(request.getServletPath().equals("/api/adminLogin")) {
+            boolean isAdmin = user.getAuthorities().stream()
+                    .anyMatch(auth -> auth.getAuthority().equals("ROLE_ADMIN"));
+
+            if(!isAdmin) {
+                response.setStatus(HttpStatus.FORBIDDEN.value());
+                response.getWriter().write("{\"error\": \"Solo administradores pueden acceder\"}");
+                response.setContentType("application/json");
+                return;
+            }
+        }
         String token = jwtUtils.generateToken(user.getUsername());
         response.addHeader("Authorization", "Bearer " + token);
         Map<String, Object> httpResponse = new HashMap<>();
