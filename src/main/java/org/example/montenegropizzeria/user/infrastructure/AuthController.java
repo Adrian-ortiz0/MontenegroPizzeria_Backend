@@ -2,6 +2,7 @@ package org.example.montenegropizzeria.user.infrastructure;
 
 import org.example.montenegropizzeria.user.domain.*;
 import org.example.montenegropizzeria.user.domain.DTO.CreateUserDTO;
+import org.example.montenegropizzeria.user.domain.DTO.LoginAdminDTO;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -24,6 +25,14 @@ public class AuthController {
         this.roleRepository = roleRepository;
         this.userRepository = userRepository;
         this.passwordEncoder = passwordEncoder;
+    }
+
+    @PostMapping("/adminLogin")
+    public ResponseEntity<?> adminLogin(@RequestBody LoginAdminDTO loginAdminDTO) {
+        UserEntity userEntity = userRepository.findByEmail(loginAdminDTO.getEmail())
+                .orElseThrow(() -> new RuntimeException("User not found"));
+
+        return ResponseEntity.ok("Admin login successful");
     }
 
     @PostMapping("/register")

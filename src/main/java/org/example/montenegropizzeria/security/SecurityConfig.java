@@ -16,6 +16,8 @@ import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
+import org.springframework.web.servlet.config.annotation.CorsRegistry;
+import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
 
 @Configuration
 @EnableGlobalMethodSecurity(prePostEnabled = true)
@@ -37,21 +39,27 @@ public class SecurityConfig {
     @Bean
     public SecurityFilterChain securityFilterChain(HttpSecurity http, AuthenticationManager authenticationManager) throws Exception {
 
-        JwtAuthenticationFilter jwtAuthenticationFilter = new JwtAuthenticationFilter(jwtUtils);
-        jwtAuthenticationFilter.setAuthenticationManager(authenticationManager);
-        jwtAuthenticationFilter.setFilterProcessesUrl("/login");
+        JwtAuthenticationFilter adminAuthenticationFilter = new JwtAuthenticationFilter(jwtUtils);
+        adminAuthenticationFilter.setAuthenticationManager(authenticationManager);
+        adminAuthenticationFilter.setFilterProcessesUrl("/api/adminLogin");
+
+        JwtAuthenticationFilter userAuthenticationFilter = new JwtAuthenticationFilter(jwtUtils);
+        userAuthenticationFilter.setAuthenticationManager(authenticationManager);
+        userAuthenticationFilter.setFilterProcessesUrl("/api/userLogin");
 
         return http
                 .csrf(csrf -> csrf.disable())
-                .authorizeHttpRequests(auth ->{
-                    auth.requestMatchers("/api/register").permitAll();
-                    auth.requestMatchers("/api/adminLogin").permitAll();
+                .authorizeHttpRequests(auth -> {
+                    auth.requestMatchers("/api/register").permitAll(); // Registro público
+                    auth.requestMatchers("/api/adminLogin").permitAll(); // Permitir acceso al login de admin
+                    auth.requestMatchers("/api/userLogin").permitAll();  // Permitir acceso al login de usuario
+                    auth.requestMatchers("/api/admin/**").hasRole("ADMIN"); // Rutas protegidas para admin
+                    auth.requestMatchers("/api/user/**").hasAnyRole("USER", "ADMIN");   // Rutas protegidas para usuarios
                     auth.anyRequest().authenticated();
                 })
-                .sessionManagement(session ->{
-                    session.sessionCreationPolicy(SessionCreationPolicy.STATELESS);
-                })
-                .addFilter(jwtAuthenticationFilter)
+                .sessionManagement(session -> session.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
+                .addFilter(adminAuthenticationFilter) // Agregar filtro de admin
+                .addFilter(userAuthenticationFilter)  // Agregar filtro de usuario
                 .addFilterBefore(jwtAuthorizationFilter, UsernamePasswordAuthenticationFilter.class)
                 .build();
     }
@@ -64,5 +72,22 @@ public class SecurityConfig {
     @Bean
     public AuthenticationManager authenticationManager(AuthenticationConfiguration authConfig) throws Exception {
         return authConfig.getAuthenticationManager();
+    }
+
+    @Configuration
+    public class CorsConfig {
+
+        @Bean
+        public WebMvcConfigurer corsConfigurer() {
+            return new WebMvcConfigurer() {
+                @Override
+                public void addCorsMappings(CorsRegistry registry) {
+                    registry.addMapping("/**")
+                            .allowedOrigins("http://localhost:4200", "http://localhost:5173", "http://localhost:8080")
+                            .allowedMethods("GET", "POST", "PUT", "DELETE", "PATCH")
+                            .allowedHeaders("*");
+                }
+            };
+        }
     }
 }

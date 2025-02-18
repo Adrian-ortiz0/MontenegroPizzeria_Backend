@@ -20,7 +20,7 @@ public class MontenegroPizzeriaApplication {
         return args -> {
             roleRepository.save(new RoleEntity(null, ERole.ADMIN));
             roleRepository.save(new RoleEntity(null, ERole.USER));
-            System.out.println("Roles insertados: ADMIN, USER y GUEST.");
+            System.out.println("Roles insertados: ADMIN y USER");
         };
     }
 
