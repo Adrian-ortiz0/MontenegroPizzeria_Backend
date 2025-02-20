@@ -1,8 +1,5 @@
 package org.example.montenegropizzeria.ingredient.domain;
 import jakarta.persistence.*;
-import org.example.montenegropizzeria.flavor.domain.Flavor;
-
-import java.util.List;
 
 @Entity
 @Table(name = "ingredients")

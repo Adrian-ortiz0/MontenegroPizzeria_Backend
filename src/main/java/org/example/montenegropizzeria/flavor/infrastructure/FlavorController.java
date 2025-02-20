@@ -1,5 +1,6 @@
 package org.example.montenegropizzeria.flavor.infrastructure;
 
+import org.example.montenegropizzeria.flavor.application.FlavorDTO;
 import org.example.montenegropizzeria.flavor.application.FlavorService;
 import org.example.montenegropizzeria.flavor.domain.Flavor;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -35,20 +36,17 @@ public class FlavorController {
     }
 
     @PostMapping
-    public ResponseEntity<Flavor> createFlavor(@RequestBody Flavor flavor){
-        flavorService.saveFlavor(flavor);
+    public ResponseEntity<Flavor> createFlavor(@RequestBody FlavorDTO flavorDTO){
+        flavorService.saveFlavor(flavorDTO);
         return ResponseEntity.status(201).build();
     }
 
     @PutMapping("/{id}")
-    public ResponseEntity<Flavor> updateFlavor(@PathVariable Long id, @RequestBody Flavor flavor){
-        Optional<Flavor> flavorDb = flavorService.findById(id);
-        if(flavorDb.isPresent()){
-            flavorDb.get().setName(flavor.getName());
-            flavorDb.get().setIngredients(flavor.getIngredients());
-            flavorService.saveFlavor(flavorDb.get());
-        }
-        return ResponseEntity.status(201).build();
+    public ResponseEntity<Flavor> updateFlavor(@PathVariable Long id, @RequestBody FlavorDTO flavorDTO) {
+        Optional<Flavor> updatedFlavor = flavorService.updateFlavor(id, flavorDTO);
+        return updatedFlavor
+                .map(ResponseEntity::ok)
+                .orElseGet(() -> ResponseEntity.notFound().build());
     }
 
     @DeleteMapping("/{id}")
