@@ -19,8 +19,6 @@ import org.springframework.security.web.authentication.UsernamePasswordAuthentic
 import org.springframework.web.cors.CorsConfiguration;
 import org.springframework.web.cors.CorsConfigurationSource;
 import org.springframework.web.cors.UrlBasedCorsConfigurationSource;
-import org.springframework.web.servlet.config.annotation.CorsRegistry;
-import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
 
 import java.util.Arrays;
 
@@ -57,8 +55,8 @@ public class SecurityConfig {
                 .csrf(csrf -> csrf.disable())
                 .authorizeHttpRequests(auth -> {
                     auth.requestMatchers("/api/register").permitAll(); // Registro público
-                    auth.requestMatchers("/api/adminLogin").permitAll();
-                    auth.requestMatchers("/api/userLogin").permitAll();
+                    auth.requestMatchers("/api/adminLogin").permitAll(); // Pemitir adminLogin
+                    auth.requestMatchers("/api/userLogin").permitAll(); // Permitir el userLogin
                     auth.requestMatchers("/api/admin/**").hasRole("ADMIN");; // Rutas protegidas para admin
                     auth.requestMatchers("/api/user/**").hasAnyRole("USER", "ADMIN");   // Rutas protegidas para usuarios
                     auth.anyRequest().authenticated();
