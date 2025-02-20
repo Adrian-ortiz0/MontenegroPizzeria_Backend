@@ -1,6 +1,6 @@
 package org.example.montenegropizzeria.flavor.domain;
 import jakarta.persistence.*;
-import org.example.montenegropizzeria.flavorIngredient.domain.FlavorIngredient;
+import org.example.montenegropizzeria.ingredient.domain.Ingredient;
 import org.example.montenegropizzeria.product.domain.Product;
 
 import java.util.List;
@@ -15,8 +15,13 @@ public class Flavor {
 
     private String name;
 
-    @OneToMany(mappedBy = "flavor", cascade = CascadeType.ALL, orphanRemoval = true, fetch = FetchType.EAGER)
-    private List<FlavorIngredient> ingredients;
+    @ManyToMany(fetch = FetchType.EAGER, targetEntity = Ingredient.class, cascade = CascadeType.PERSIST)
+    @JoinTable(
+            name = "flavor_ingredient",
+            joinColumns = @JoinColumn(name = "flavor_id"),
+            inverseJoinColumns = @JoinColumn(name = "ingredient_id")
+    )
+    private List<Ingredient> ingredients;
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "product_id")
@@ -25,7 +30,7 @@ public class Flavor {
     public Flavor() {
     }
 
-    public Flavor(Long id, String name, List<FlavorIngredient> ingredients, Product product) {
+    public Flavor(Long id, String name, List<Ingredient> ingredients, Product product) {
         this.id = id;
         this.name = name;
         this.ingredients = ingredients;
@@ -48,11 +53,11 @@ public class Flavor {
         this.name = name;
     }
 
-    public List<FlavorIngredient> getIngredients() {
+    public List<Ingredient> getIngredients() {
         return ingredients;
     }
 
-    public void setIngredients(List<FlavorIngredient> ingredients) {
+    public void setIngredients(List<Ingredient> ingredients) {
         this.ingredients = ingredients;
     }
 
