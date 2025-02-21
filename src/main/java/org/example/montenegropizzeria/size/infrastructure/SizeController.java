@@ -45,6 +45,7 @@ public class SizeController {
         Optional<Size> sizeDb = sizeService.findSizeById(id);
         if (sizeDb.isPresent()) {
             sizeDb.get().setSize(size.getSize());
+            sizeDb.get().setBasePrice(size.getBasePrice());
             return ResponseEntity.status(201).body(sizeDb.get());
         }
         return ResponseEntity.notFound().build();

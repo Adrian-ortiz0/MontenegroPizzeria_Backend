@@ -15,6 +15,8 @@ public class Flavor {
 
     private String name;
 
+    private double price;
+
     @ManyToMany(fetch = FetchType.EAGER, targetEntity = Ingredient.class, cascade = CascadeType.PERSIST)
     @JoinTable(
             name = "flavor_ingredient",
@@ -30,15 +32,24 @@ public class Flavor {
     public Flavor() {
     }
 
-    public Flavor(Long id, String name, List<Ingredient> ingredients, Product product) {
+    public Flavor(Long id, String name, double price, List<Ingredient> ingredients, Product product) {
         this.id = id;
         this.name = name;
+        this.price = price;
         this.ingredients = ingredients;
         this.product = product;
     }
 
     public Long getId() {
         return id;
+    }
+
+    public double getPrice() {
+        return price;
+    }
+
+    public void setPrice(double price) {
+        this.price = price;
     }
 
     public void setId(Long id) {

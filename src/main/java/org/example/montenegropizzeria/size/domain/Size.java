@@ -17,13 +17,16 @@ public class Size {
     @JoinColumn(name = "product_id", nullable = true)
     private Product product;
 
+    private double basePrice;
+
     public Size() {
     }
 
-    public Size(Long id, String size, Product product) {
+    public Size(Long id, String size, Product product, double basePrice) {
         this.id = id;
         this.size = size;
         this.product = product;
+        this.basePrice = basePrice;
     }
 
     public Long getId() {
@@ -32,6 +35,14 @@ public class Size {
 
     public void setId(Long id) {
         this.id = id;
+    }
+
+    public double getBasePrice() {
+        return basePrice;
+    }
+
+    public void setBasePrice(double basePrice) {
+        this.basePrice = basePrice;
     }
 
     public String getSize() {

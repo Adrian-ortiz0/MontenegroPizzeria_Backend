@@ -5,18 +5,28 @@ import java.util.List;
 public class FlavorDTO {
 
     private String name;
+    private double price;
     private List<Long> ingredients;
 
     public FlavorDTO() {
     }
 
-    public FlavorDTO(String name, List<Long> ingredients) {
+    public FlavorDTO(String name, double price, List<Long> ingredients) {
         this.name = name;
+        this.price = price;
         this.ingredients = ingredients;
     }
 
     public String getName() {
         return name;
+    }
+
+    public double getPrice() {
+        return price;
+    }
+
+    public void setPrice(double price) {
+        this.price = price;
     }
 
     public void setName(String name) {

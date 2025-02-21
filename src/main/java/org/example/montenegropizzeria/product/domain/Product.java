@@ -1,7 +1,6 @@
 package org.example.montenegropizzeria.product.domain;
 import jakarta.persistence.*;
 import org.example.montenegropizzeria.flavor.domain.Flavor;
-import org.example.montenegropizzeria.ingredient.domain.Ingredient;
 import org.example.montenegropizzeria.size.domain.Size;
 
 import java.util.List;
@@ -16,8 +15,6 @@ public class Product {
 
     private String name;
 
-    private double price;
-
     @OneToMany(mappedBy = "product", fetch = FetchType.EAGER, cascade = CascadeType.ALL)
     private List<Flavor> flavors;
 
@@ -29,10 +26,9 @@ public class Product {
     public Product() {
     }
 
-    public Product(Long id, String name, double price, List<Flavor> flavors, List<Size> sizes, String image) {
+    public Product(Long id, String name, List<Flavor> flavors, List<Size> sizes, String image) {
         this.id = id;
         this.name = name;
-        this.price = price;
         this.flavors = flavors;
         this.sizes = sizes;
         this.image = image;
@@ -52,14 +48,6 @@ public class Product {
 
     public void setName(String name) {
         this.name = name;
-    }
-
-    public double getPrice() {
-        return price;
-    }
-
-    public void setPrice(double price) {
-        this.price = price;
     }
 
     public List<Flavor> getFlavors() {

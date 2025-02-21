@@ -52,6 +52,7 @@ public class FlavorServiceImpl implements FlavorService {
         Optional<Flavor> flavorDb = flavorRepository.findById(id);
         if (flavorDb.isPresent()) {
             Flavor flavor = flavorDb.get();
+            flavor.setPrice(flavorDTO.getPrice());
             flavor.setName(flavorDTO.getName());
 
             List<Ingredient> ingredients = ingredientRepository.findAllById(flavorDTO.getIngredients());
