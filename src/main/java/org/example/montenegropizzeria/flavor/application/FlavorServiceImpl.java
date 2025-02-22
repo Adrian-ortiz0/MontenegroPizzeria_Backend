@@ -4,6 +4,8 @@ import org.example.montenegropizzeria.flavor.domain.Flavor;
 import org.example.montenegropizzeria.flavor.domain.FlavorRepository;
 import org.example.montenegropizzeria.ingredient.domain.Ingredient;
 import org.example.montenegropizzeria.ingredient.domain.IngredientRepository;
+import org.example.montenegropizzeria.product.domain.Product;
+import org.example.montenegropizzeria.product.domain.ProductRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -15,11 +17,15 @@ public class FlavorServiceImpl implements FlavorService {
 
     private final FlavorRepository flavorRepository;
     private final IngredientRepository ingredientRepository;
+    private final ProductRepository productRepository;
 
     @Autowired
-    public FlavorServiceImpl(FlavorRepository flavorRepository, IngredientRepository ingredientRepository) {
+    public FlavorServiceImpl(FlavorRepository flavorRepository,
+                             IngredientRepository ingredientRepository,
+                             ProductRepository productRepository) {
         this.flavorRepository = flavorRepository;
         this.ingredientRepository = ingredientRepository;
+        this.productRepository = productRepository;
     }
 
     @Override
@@ -36,7 +42,7 @@ public class FlavorServiceImpl implements FlavorService {
     public Flavor saveFlavor(FlavorDTO flavorDTO) {
         Flavor flavor = new Flavor();
         flavor.setName(flavorDTO.getName());
-
+        flavor.setPrice(flavorDTO.getPrice());
         List<Ingredient> ingredients = ingredientRepository.findAllById(flavorDTO.getIngredients());
 
         flavor.setIngredients(ingredients);

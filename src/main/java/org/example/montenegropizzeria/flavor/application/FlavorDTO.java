@@ -20,6 +20,9 @@ public class FlavorDTO {
     public String getName() {
         return name;
     }
+    public void setName(String name) {
+        this.name = name;
+    }
 
     public double getPrice() {
         return price;
@@ -29,9 +32,6 @@ public class FlavorDTO {
         this.price = price;
     }
 
-    public void setName(String name) {
-        this.name = name;
-    }
 
     public List<Long> getIngredients() {
         return ingredients;
@@ -40,4 +40,6 @@ public class FlavorDTO {
     public void setIngredients(List<Long> ingredients) {
         this.ingredients = ingredients;
     }
+
+
 }
